@@ -1,40 +1,62 @@
 <template>
   <section class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        youtube-no-controls
-      </h1>
-      <h2 class="subtitle">
-        nuxt project that displays youtube videos without controls
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >GitHub</a>
-      </div>
+    <div class="control has-icons-left has-icons-right">
+      <input
+        class="input is-large"
+        v-model="video"
+        type="text"
+        placeholder="Youtube Link"
+        @keyup.enter="goToVideo"
+        @paste="checkLinkValidity"
+      >
+      <span class="icon is-medium is-left">
+        <i class="fab fa-youtube" />
+      </span>
+      <span class="icon is-medium is-right">
+        <i
+          :class="checkedCssClass"
+          class="fas fa-check"
+        />
+      </span>
     </div>
   </section>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
 export default {
-  components: {
-    Logo
-  }
-}
+  data() {
+    return {
+      video: null,
+      linkIsValid: false,
+    };
+  },
+  methods: {
+    goToVideo() {
+      this.$router.push(`/video/${this.videoId}`);
+    },
+    checkLinkValidity() {
+      if (this.videoId.length > 0 && this.video.includes('youtu')) this.linkIsValid = true;
+    },
+  },
+  computed: {
+    videoId() {
+      return this.video.replace('https://youtu.be/', '');
+    },
+    checkedCssClass() {
+      return this.linkIsValid ? 'fa-check--checked' : '';
+    },
+  },
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
+
+.fa-check {
+  &--checked {
+    color: green;
+  }
+}
+
 .container {
   margin: 0 auto;
   min-height: 100vh;
